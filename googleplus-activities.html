@@ -31,7 +31,7 @@
       // The provided key works for this sample only when run from
       // https://google-api-javascript-client.googlecode.com/hg/samples/authSample.html
       // To use in your own application, replace this API key with your own.
-      var apiKey = '';
+      var apiKey = 'AIzaSyAso9k8A6SVylVBO9e7FdZMIS8OMiVcKHc';
 
       // Use a button to handle authentication the first time.
       function handleClientLoad() {
@@ -43,9 +43,7 @@
       function makeApiCall() {
         gapi.client.load('plus', 'v1', function() {
           var request = gapi.client.plus.people.get({
-            'userId': ''
-            // For instance: 
-            // 'userId': '+GregorioRobles'
+            'userId': '108086881826934773478'
           });
           request.execute(function(resp) {
             var heading = document.createElement('h4');
@@ -57,10 +55,37 @@
             document.getElementById('content').appendChild(heading);
           });
         });
+         gapi.client.load('plus', 'v1', function() {
+          var publications = gapi.client.plus.activities.list({
+            'userId': '108086881826934773478', 
+            'collection' : 'public'
+          });
+      
+          publications.execute(function(resp) {
+            var n = resp.items.length;
+            var list = document.createElement('ol');
+            for (i = 0; i < n; i++) {
+              var entry = document.createElement('li');
+              var sep= document.createElement('p');
+              var text =resp.items[i].object.content
+              entry.innerHTML = text;
+              if (text){
+                sep.innerHTML ="-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------"
+                document.getElementById('content').appendChild(sep);
+              }
+              document.getElementById('content').appendChild(entry);
+              if(resp.items[i].location){
+                var location = document.createElement('p');
+                location.innerHTML = "[ Latitude: " +resp.items[i].location.position.latitude + " Longitude: " + resp.items[i].location.position.longitude+ " ]";
+                document.getElementById('content').appendChild(location);
+              }
+            }
+          });
+        });
       }
     </script>
     <script src="https://apis.google.com/js/client.js?onload=handleClientLoad"></script>
     <div id="content"></div>
-    <p>Retrieves your profile name (and picture) using the Google Plus API.</p>
+     <p>Retrieves your profile name (and picture) using the Google Plus API.</p>
   </body>
 </html>
